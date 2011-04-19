@@ -1,0 +1,3 @@
+* What is Crop Extractor?
+    Provides an interface for automatically collecting the annotated parts of an
+    image in croped ROIs.
