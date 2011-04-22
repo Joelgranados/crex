@@ -27,8 +27,11 @@ using namespace std;
 CroppedImage::CroppedImage ():
   image(Mat::zeros(1,1,CV_8U)),label("") {}
 
-CroppedImage::CroppedImage ( const Mat& image, const string& label ):
-  image(image), label(label) {}
+CroppedImage::CroppedImage ( const Mat& image, const string& label )
+{
+  this->image = image;
+  this->label = label;
+}
 
 bool
 CroppedImage::saveTo ( const string& filename )
@@ -74,12 +77,18 @@ VirtualCroppedImageExtractor::extractCroppedImages ()
 /*}}} VirtualCroppedImageExtractor Class */
 
 /*{{{ ITUAnnotationVer1*/
+ITUAnnotationVer1::ITUAnnotationVer1():VirtualCroppedImageExtractor(){}
+
+ITUAnnotationVer1::ITUAnnotationVer1
+  ( const string& imgfile, const string& annfile ):
+  VirtualCroppedImageExtractor ( imgfile, annfile ){};
+
 map<string, Rect>
-CroppedImageExtractor::getRectangles ()
+ITUAnnotationVer1::getRectangles ()
 {
   string line;
   map<string, Rect> rectangles;
-  ifstream annfilestream ( this->annfile, ifstream::in );
+  ifstream annfilestream ( this->annfile.data(), ifstream::in );
   int from, to;
 
   if ( annfilestream.is_open() )
@@ -89,7 +98,7 @@ CroppedImageExtractor::getRectangles ()
       getline(annfilestream, line);
 
       /* Ignore everything except lines starting with "Bounding"*/
-      if ( line.substr(0,8).compare("Bounding") != 0 && line.size > 75)
+      if ( line.substr(0,8).compare("Bounding") != 0 && line.size() > 75)
         continue;
 
       // FIXME: Need error checking.
@@ -127,7 +136,7 @@ CroppedImageExtractor::getRectangles ()
 
 /*}}} ITUAnnotationVer1*/
 
-void
+int
 main (){
   CroppedImageExtractor cie("file", "file2");
 }

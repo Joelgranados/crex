@@ -29,8 +29,8 @@ class CroppedImage{
     string get_label ();
 
   private:
-    const string label;
-    const Mat image;
+    string label;
+    Mat image;
 };
 /*}}} CroppedImage Class*/
 
@@ -44,7 +44,7 @@ class VirtualCroppedImageExtractor{
     virtual map<string, Rect> getRectangles () = 0; //overrideMe!
     virtual ~VirtualCroppedImageExtractor () {};
 
-  private:
+  protected:
     const string imgfile;
     const string annfile; //annotation file
     Mat img;
@@ -55,6 +55,8 @@ class VirtualCroppedImageExtractor{
 /*{{{ ITUAnnotationVer1 class*/
 class ITUAnnotationVer1 : public VirtualCroppedImageExtractor{
   public:
+    ITUAnnotationVer1 ();
+    ITUAnnotationVer1 ( const string&, const string& );
     virtual map<string, Rect> getRectangles ();
 };
 /*}}} ITUAnnotationVer1 class*/
