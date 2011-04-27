@@ -53,4 +53,4 @@ add_executable(crex cropextractor.cpp)
 #set_target_properties (_ilac PROPERTIES PREFIX "") #get rid of the lib*
 
 # Make sure we link to the found opencv stuff.
-#target_link_libraries (_ilac ${OpenCV_LIBS})
+target_link_libraries (crex ${OpenCV_LIBS})
