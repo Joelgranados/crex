@@ -35,20 +35,28 @@ class CroppedImage{
 /*}}} CroppedImage Class*/
 
 /*{{{ VirtualCroppedImageExtractor class*/
+struct SimpleAnn {
+  Rect rect;
+  string label;
+};
+
 class VirtualCroppedImageExtractor{
   public:
     VirtualCroppedImageExtractor ();
     VirtualCroppedImageExtractor ( const string&, const string& );
     bool extractCroppedImages ();
-    vector<CroppedImage> getCroppedImages ();
-    virtual map<string, Rect> getRectangles () = 0; //overrideMe!
+    vector<CroppedImage*> getCroppedImages ();
+    virtual vector<SimpleAnn> getRectangles () = 0; //overrideMe!
     virtual ~VirtualCroppedImageExtractor () {};
 
-  protected:
-    const string imgfile;
-    const string annfile; //annotation file
+  private:
     Mat img;
-    vector<CroppedImage> croppedImages;
+    vector<CroppedImage*> croppedImages;
+    const string imgfile;
+
+  protected:
+    /*Used by virutal getRectangles*/
+    const string annfile;
 };
 /*}}} VirtualCroppedImageExtractor class*/
 
@@ -57,7 +65,8 @@ class ITUAnnotationVer1 : public VirtualCroppedImageExtractor{
   public:
     ITUAnnotationVer1 ();
     ITUAnnotationVer1 ( const string&, const string& );
-    virtual map<string, Rect> getRectangles ();
+    virtual vector<SimpleAnn> getRectangles ();
+    virtual ~ITUAnnotationVer1 () {};
 };
 /* To make a custom implementation of CroppedImageExtractor create an
  * intermediate class like ITUAnnotationVer1 and use typedef to activate it*/

@@ -46,33 +46,39 @@ VirtualCroppedImageExtractor::VirtualCroppedImageExtractor ():
   imgfile(""),
   annfile(""),
   img(Mat::zeros(1,1,CV_8U)),
-  croppedImages(vector<CroppedImage>()) {}
+  croppedImages(vector<CroppedImage*>()) {}
 
 VirtualCroppedImageExtractor::VirtualCroppedImageExtractor
   ( const string& imgfile, const string& annfile ):
   imgfile(imgfile),
   annfile(annfile),
   img(Mat::zeros(1,1,CV_8U)),
-  croppedImages(vector<CroppedImage>())
+  croppedImages(vector<CroppedImage*>())
 {
   img = imread(this->imgfile);
-  extractCroppedImages ();
 }
 
 bool
 VirtualCroppedImageExtractor::extractCroppedImages ()
 {
-  map<string, Rect> rectangles = getRectangles();
-  map<string, Rect>::iterator iter;
+  vector<SimpleAnn> rectangles = getRectangles();
+  vector<SimpleAnn>::iterator iter;
+  CroppedImage *ci;
 
   this->croppedImages.clear();
   for ( iter=rectangles.begin() ; iter != rectangles.end(); iter++ )
-    this->croppedImages.push_back( CroppedImage(Mat(this->img, (*iter).second),
-                                   (*iter).first) );
+  {
+    ci = new CroppedImage ( Mat(this->img, (*iter).rect), (*iter).label );
+    this->croppedImages.push_back( ci );
+  }
   return true;
 }
 
-//FIXME: implement getCroppedImages.
+vector<CroppedImage*>
+VirtualCroppedImageExtractor::getCroppedImages ()
+{
+  return this->croppedImages;
+}
 /*}}} VirtualCroppedImageExtractor Class */
 
 /*{{{ ITUAnnotationVer1*/
@@ -82,11 +88,11 @@ ITUAnnotationVer1::ITUAnnotationVer1
   ( const string& imgfile, const string& annfile ):
   VirtualCroppedImageExtractor ( imgfile, annfile ){};
 
-map<string, Rect>
+vector<SimpleAnn>
 ITUAnnotationVer1::getRectangles ()
 {
   string line;
-  map<string, Rect> rectangles;
+  vector<SimpleAnn> rectangles;
   ifstream annfilestream ( this->annfile.data(), ifstream::in );
   int from, to;
 
@@ -97,7 +103,7 @@ ITUAnnotationVer1::getRectangles ()
       getline(annfilestream, line);
 
       /* Ignore everything except lines starting with "Bounding"*/
-      if ( line.substr(0,8).compare("Bounding") != 0 && line.size() > 75)
+      if ( line.substr(0,8).compare("Bounding") != 0 || line.size() < 75)
         continue;
 
       // FIXME: Need error checking.
@@ -105,28 +111,31 @@ ITUAnnotationVer1::getRectangles ()
       Rect rect;
 
       /*label*/
-      from=27; to=line.find("\" (", 27);
-      label = line.substr(from, to);
+      from=line.find(" \"")+2; to=line.find("\" (", from);
+      label = line.substr(from, to-from);
 
       /*xmin*/
-      from=to; to=from+33;
-      istringstream(line.substr(from,to)) >> rect.x;
+      from=to+33; to=line.find(", ", from);
+      istringstream(line.substr(from,to-from)) >> rect.x;
 
       /*ymin*/
       from=to+2; to=line.find(") - (", from);
-      istringstream(line.substr(from,to)) >> rect.y;
+      istringstream(line.substr(from,to-from)) >> rect.y;
 
       /*width - xmax*/
       from=to+5; to=line.find(", ", from);
-      istringstream(line.substr(from,to)) >> rect.width;
+      istringstream(line.substr(from,to-from)) >> rect.width;
       rect.width = rect.width - rect.x;
 
       /*height - ymax*/
       from=to+2; to =line.find(")", from);
-      istringstream(line.substr(from,to)) >> rect.height;
+      istringstream(line.substr(from,to-from)) >> rect.height;
       rect.height = rect.height - rect.y;
 
-      rectangles[label] = rect;
+      SimpleAnn temp;
+      temp.rect = rect;
+      temp.label = label;
+      rectangles.push_back ( temp );
     }
     annfilestream.close();
   }

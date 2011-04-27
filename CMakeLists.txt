@@ -22,7 +22,7 @@ project (CropExtractor)
 # Set the version number
 set (CREX_VER_MAJOR 0)
 set (CREX_VER_MINOR 1)
-set (CREX_NAME "\"Extracting crops from annotated images\"")
+set (CREX_NAME "\"Cropped Image Extractor\"")
 
 # Copy <from> <to> and make the modifications
 configure_file (
@@ -48,9 +48,8 @@ if(DEFINE_DEBUG)
     message("Build type is " ${CMAKE_BUILD_TYPE})
 endif(DEFINE_DEBUG)
 
-add_executable(crex crex.cpp)
-#add_library (_ilac SHARED ilacLabeler.cpp ilacSquare.cpp _ilac.cpp)
-#set_target_properties (_ilac PROPERTIES PREFIX "") #get rid of the lib*
+add_library (pycrex SHARED crex.cpp pycrex.cpp)
+set_target_properties (pycrex PROPERTIES PREFIX "") #get rid of the lib*
 
 # Make sure we link to the found opencv stuff.
-target_link_libraries (crex ${OpenCV_LIBS})
+target_link_libraries (pycrex ${OpenCV_LIBS})
