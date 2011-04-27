@@ -18,7 +18,7 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include<fstream>
-#include "cropextractor.h"
+#include "crex.h"
 
 using namespace cv;
 using namespace std;

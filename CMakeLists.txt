@@ -48,7 +48,7 @@ if(DEFINE_DEBUG)
     message("Build type is " ${CMAKE_BUILD_TYPE})
 endif(DEFINE_DEBUG)
 
-add_executable(crex cropextractor.cpp)
+add_executable(crex crex.cpp)
 #add_library (_ilac SHARED ilacLabeler.cpp ilacSquare.cpp _ilac.cpp)
 #set_target_properties (_ilac PROPERTIES PREFIX "") #get rid of the lib*
 
