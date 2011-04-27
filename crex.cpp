@@ -27,11 +27,8 @@ using namespace std;
 CroppedImage::CroppedImage ():
   image(Mat::zeros(1,1,CV_8U)),label("") {}
 
-CroppedImage::CroppedImage ( const Mat& image, const string& label )
-{
-  this->image = image;
-  this->label = label;
-}
+CroppedImage::CroppedImage ( const Mat& image, const string& label ):
+  image(image),label(label) {}
 
 bool
 CroppedImage::saveTo ( const string& filename )

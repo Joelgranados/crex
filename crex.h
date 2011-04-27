@@ -64,5 +64,3 @@ class ITUAnnotationVer1 : public VirtualCroppedImageExtractor{
 /*{{{ CroppedImageExtractor*/
 typedef ITUAnnotationVer1 CroppedImageExtractor;
 /*}}} CroppedImageExtractor*/
-
-
