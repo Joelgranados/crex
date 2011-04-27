@@ -59,8 +59,12 @@ class ITUAnnotationVer1 : public VirtualCroppedImageExtractor{
     ITUAnnotationVer1 ( const string&, const string& );
     virtual map<string, Rect> getRectangles ();
 };
+/* To make a custom implementation of CroppedImageExtractor create an
+ * intermediate class like ITUAnnotationVer1 and use typedef to activate it*/
 /*}}} ITUAnnotationVer1 class*/
 
 /*{{{ CroppedImageExtractor*/
 typedef ITUAnnotationVer1 CroppedImageExtractor;
 /*}}} CroppedImageExtractor*/
+
+
