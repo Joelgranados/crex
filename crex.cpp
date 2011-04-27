@@ -71,6 +71,8 @@ VirtualCroppedImageExtractor::extractCroppedImages ()
                                    (*iter).first) );
   return true;
 }
+
+//FIXME: implement getCroppedImages.
 /*}}} VirtualCroppedImageExtractor Class */
 
 /*{{{ ITUAnnotationVer1*/
