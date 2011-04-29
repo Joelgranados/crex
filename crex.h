@@ -26,6 +26,7 @@ class CroppedImage{
     CroppedImage ();
     CroppedImage ( const Mat&, const string& );
     bool saveTo ( const string& );
+    bool adjustDims ( const int, const int );
     string get_label ();
 
   private:

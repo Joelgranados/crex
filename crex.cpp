@@ -37,6 +37,28 @@ CroppedImage::saveTo ( const string& filename )
   return imwrite(filename,this->image);
 }
 
+bool
+CroppedImage::adjustDims ( const int width, const int height )
+{
+  Mat temp = Mat::zeros ( 1, 1, CV_32F );
+  Point2f srcpoints[4] = {
+    Point2f ( 0, 0 ),
+    Point2f ( 0, this->image.size().height ),
+    Point2f ( this->image.size().width, 0 ),
+    Point2f ( this->image.size().width, this->image.size().height ) };
+  Point2f dstpoints[4] = {
+    Point2f ( 0, 0 ),
+    Point2f ( 0, height ),
+    Point2f ( width, 0 ),
+    Point2f ( width, height ) };
+
+  Mat aftr = getAffineTransform ( srcpoints, dstpoints );
+  warpAffine ( this->image, temp, aftr, Size(width, height) );
+  this->image = temp;
+
+  return true;
+}
+
 string
 CroppedImage::get_label () {return label;}
 /*}}} CroppedImage Class*/

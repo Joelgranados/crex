@@ -82,6 +82,19 @@ Crim_save_to ( Crim *self, PyObject *args )
     Py_RETURN_FALSE;
 }
 
+static PyObject*
+Crim_adjust_dims ( Crim *self, PyObject *args )
+{
+  int width, height;
+  if ( !PyArg_ParseTuple ( args, "ii", &width, &height ) )
+    CREX_RETPYERR ( "Invalid param in Crim_adjust_dims." );
+
+  if ( self->ci->adjustDims ( width, height ) )
+    Py_RETURN_TRUE;
+  else
+    Py_RETURN_FALSE;
+}
+
 static PyMemberDef Crim_members[] = { {NULL} };
 
 static PyMethodDef Crim_methods[] = {
@@ -89,6 +102,8 @@ static PyMethodDef Crim_methods[] = {
     "Return the label string for this cropped image."},
   {"save_to", (PyCFunction)Crim_save_to, METH_VARARGS,
     "Save this cropped image to filename."},
+  {"adjust_dims", (PyCFunction)Crim_adjust_dims, METH_VARARGS,
+    "Chante image dimensions with opencv's warpAffine"},
   {NULL}  /* Sentinel */
 };
 
