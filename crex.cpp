@@ -17,7 +17,7 @@
  */
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
-#include<fstream>
+#include <fstream>
 #include "crex.h"
 
 using namespace cv;
@@ -81,7 +81,7 @@ VirtualCroppedImageExtractor::VirtualCroppedImageExtractor
 }
 
 bool
-VirtualCroppedImageExtractor::extractCroppedImages ()
+VirtualCroppedImageExtractor::extractCroppedImages ( const int margin )
 {
   vector<SimpleAnn> rectangles = getRectangles();
   vector<SimpleAnn>::iterator iter;
@@ -90,6 +90,19 @@ VirtualCroppedImageExtractor::extractCroppedImages ()
   this->croppedImages.clear();
   for ( iter=rectangles.begin() ; iter != rectangles.end(); iter++ )
   {
+    if ( margin > 0 )
+    {
+      (*iter).rect.x = (*iter).rect.x - margin;
+      (*iter).rect.y = (*iter).rect.y - margin;
+      (*iter).rect.width = (*iter).rect.width + (2*margin);
+      (*iter).rect.height = (*iter).rect.height + (2*margin);
+    }
+
+    if ( (*iter).rect.x < 0 || (*iter).rect.y < 0
+         || (*iter).rect.x + (*iter).rect.width > this->img.cols
+         || (*iter).rect.y + (*iter).rect.height > this->img.rows )
+      continue; /*FIXME: Tell the caller about this*/
+
     ci = new CroppedImage ( Mat(this->img, (*iter).rect), (*iter).label );
     this->croppedImages.push_back( ci );
   }

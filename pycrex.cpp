@@ -164,8 +164,9 @@ static PyObject*
 Crex_get_cropped_images ( PyObject *self, PyObject *args )
 {
   char *img_file, *ann_file;
+  int margin;
 
-  if ( !PyArg_ParseTuple ( args, "ss", &img_file, &ann_file ) )
+  if ( !PyArg_ParseTuple ( args, "ssI", &img_file, &ann_file, &margin ) )
     CREX_RETPYERR ( "Invalid params for Crex_get_cropped_images." );
 
   struct stat file_stat;
@@ -175,14 +176,14 @@ Crex_get_cropped_images ( PyObject *self, PyObject *args )
     CREX_RETPYERR ( "Annotation file does not exist." );
 
   CroppedImageExtractor cie = CroppedImageExtractor ( img_file, ann_file );
-  cie.extractCroppedImages ();
+  cie.extractCroppedImages ( margin );
   vector<CroppedImage*> cis = cie.getCroppedImages ();
 
   /* list that will hold the Crim objects*/
   PyObject *crims = PyList_New ( cis.size() );
 
-  int i=0;
-  for ( vector<CroppedImage*>::iterator iter=cis.begin() ;
+  int i = 0;
+  for ( vector<CroppedImage*>::iterator iter = cis.begin() ;
         iter != cis.end() ; iter++, i++ )
   {
     Crim *temp;

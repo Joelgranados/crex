@@ -23,7 +23,7 @@ import pycrex
 import logging
 import sys
 
-def crex_dir ( from_dir, to_dir=None, ext="png", new_size=None ):
+def crex_dir ( from_dir, to_dir=None, ext="png", new_size=None, margin=0 ):
     """Extract annotated images.
     from_dir = Where to look for the images and annotations.
     to_dir = Where to put the crops.  Defaults to from_dir.
@@ -60,14 +60,13 @@ def crex_dir ( from_dir, to_dir=None, ext="png", new_size=None ):
     for ann_pair in ann_pairs:
         (img_file, ann_file) = ann_pair
         crexlog.debug("crexing %s" % ann_file)
-        crop_imgs = pycrex.get_cropped_images(img_file, ann_file)
+        crop_imgs = pycrex.get_cropped_images(img_file, ann_file, margin)
         for crop_img in crop_imgs:
             if not new_size is None and type(new_size) is tuple \
                     and len(new_size) == 2:
                 crop_img.adjust_dims( new_size[0], new_size[1] )
 
             crop_img.save_to( npf.get_output_path(crop_img.get_label()) )
-
 
 class NumberedPathFactory:
     #top_dir = None

@@ -45,7 +45,7 @@ class VirtualCroppedImageExtractor{
   public:
     VirtualCroppedImageExtractor ();
     VirtualCroppedImageExtractor ( const string&, const string& );
-    bool extractCroppedImages ();
+    bool extractCroppedImages ( const int = 0 );
     vector<CroppedImage*> getCroppedImages ();
     virtual vector<SimpleAnn> getRectangles () = 0; //overrideMe!
     virtual ~VirtualCroppedImageExtractor () {};
