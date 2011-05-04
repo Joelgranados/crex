@@ -51,11 +51,6 @@ Crim_new ( PyTypeObject *type, PyObject *args, PyObject *kwds )
   return (PyObject *)self;
 }
 
-/* instantiates new objects*/
-static int
-Crim_init ( Crim *self, PyObject *args, PyObject *kwds )
-{ /*FIXME: is not supposed to be used from outside.*/ }
-
 static PyObject*
 Crim_get_label ( Crim *self )
 {
@@ -144,7 +139,7 @@ static PyTypeObject CrimType = {
   0,                         /* tp_descr_get */
   0,                         /* tp_descr_set */
   0,                         /* tp_dictoffset */
-  (initproc)Crim_init,      /* tp_init */
+  0,                        /* tp_init */
   0,                         /* tp_alloc */
   Crim_new,                 /* tp_new */
 };
