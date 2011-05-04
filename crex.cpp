@@ -178,8 +178,3 @@ ITUAnnotationVer1::getRectangles ()
 }
 
 /*}}} ITUAnnotationVer1*/
-
-int
-main (){
-  CroppedImageExtractor cie("file", "file2");
-}
