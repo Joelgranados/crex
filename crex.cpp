@@ -77,6 +77,7 @@ VirtualCroppedImageExtractor::VirtualCroppedImageExtractor
   img(Mat::zeros(1,1,CV_8U)),
   croppedImages(vector<CroppedImage*>())
 {
+  //FIXME: check if file exists.
   img = imread(this->imgfile);
 }
 
